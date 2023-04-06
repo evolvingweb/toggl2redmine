@@ -1,7 +1,7 @@
 # frozen_string_literal: true
-
-require_relative 'lib/toggl_2_redmine'
-
+Rails.configuration.to_prepare do
+  require_relative 'lib/toggl_2_redmine'
+end
 Redmine::Plugin.register :toggl2redmine do
   # Package info.
   name 'Toggl 2 Redmine'
@@ -18,5 +18,7 @@ Redmine::Plugin.register :toggl2redmine do
        caption: 'Toggl'
 end
 
-# Patches.
-require 'patches/time_entry'
+Rails.configuration.to_prepare do
+  # Patches.
+  require 'patches/time_entry_patch'
+end
