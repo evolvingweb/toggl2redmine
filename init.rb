@@ -2,23 +2,25 @@
 
 Rails.configuration.to_prepare do
   require_relative 'lib/toggl_2_redmine'
+end 
 
-  Redmine::Plugin.register :toggl2redmine do
-    # Package info.
-    name 'Toggl 2 Redmine'
-    author 'Jigarius'
-    description 'Imports time entries from Toggl into Redmine.'
-    version Toggl2Redmine::VERSION
-    url 'https://github.com/jigarius/toggl2redmine'
-    author_url 'https://jigarius.com/'
+Redmine::Plugin.register :toggl2redmine do
+  # Package info.
+  name 'Toggl 2 Redmine'
+  author 'Jigarius'
+  description 'Imports time entries from Toggl into Redmine.'
+  version Toggl2Redmine::VERSION
+  url 'https://github.com/jigarius/toggl2redmine'
+  author_url 'https://jigarius.com/'
 
-    # Menu items.
-    menu :application_menu,
-         :toggl2redmine,
-         { controller: 't2r_import', action: 'index' },
-         caption: 'Toggl'
-  end
+  # Menu items.
+  menu :application_menu,
+       :toggl2redmine,
+       { controller: 't2r_import', action: 'index' },
+       caption: 'Toggl'
+end
 
+Rails.configuration.to_prepare do
   # Patches.
   require_relative 'lib/patches/time_entry'
 end
