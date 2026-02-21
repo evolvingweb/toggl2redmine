@@ -1,8 +1,14 @@
 # frozen_string_literal: true
 
-Rails.configuration.to_prepare do
-  require_relative 'lib/toggl_2_redmine'
-end 
+require 'redmine'
+
+# Tell Zeitwerk to ignore this plugin's lib directory
+plugin_lib = File.join(File.dirname(__FILE__), 'lib')
+Rails.autoloaders.each { |loader| loader.ignore(plugin_lib) }
+
+# Require plugin files
+require File.join(plugin_lib, 'toggl_2_redmine')
+require File.join(plugin_lib, 'toggl_2_redmine/patches/time_entry_patch')
 
 Redmine::Plugin.register :toggl2redmine do
   # Package info.
@@ -18,9 +24,4 @@ Redmine::Plugin.register :toggl2redmine do
        :toggl2redmine,
        { controller: 't2r_import', action: 'index' },
        caption: 'Toggl'
-end
-
-Rails.configuration.to_prepare do
-  # Patches.
-  require_relative 'lib/patches/time_entry'
 end
