@@ -242,18 +242,28 @@ function initDurationRoundingMethodDropdown(el: HTMLElement): void {
 
 function initRedmineActivityDropdown(el: HTMLElement): void {
   const $el = $(el)
-  redmineService.getTimeEntryActivities((activities: DropdownOption[] | null) => {
+  redmineService.getTimeEntryActivities((activities: models.TimeEntryActivity[] | null) => {
     if (activities === null) return
+
+    // Only show active activities.
+    const activeActivities = activities.filter((a) => a.active !== false)
 
     // Generate a SELECT element and use its options.
     const $select = buildDropdownFromRecords({
       placeholder: $el.data('placeholder'),
-      records: activities
+      records: activeActivities
     });
 
     $el.append($select.find('option')).val('');
 
-    const value = $el.data('selected') || '';
+    let value = $el.data('selected') || '';
+
+    // If the selected value is not among active activities, fall back to the default activity.
+    if (value && !activeActivities.find((a) => a.id.toString() === value.toString())) {
+      const defaultActivity = activeActivities.find((a) => a.is_default)
+      value = defaultActivity ? defaultActivity.id : ''
+    }
+
     $el.val(value).removeData('selected');
   })
 }
